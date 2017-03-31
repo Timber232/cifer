@@ -10,26 +10,18 @@ function usage() {
 	echo "Usage: $0 [-E | -D] [-u <email|user_id>] [-p <file_path>]" 1>&2; exit 1; 
 }
 
-# Check if directory exists
-function directory_exists() {
-	if [ -d "$0" ]; then
-		return true
-	else 
-		return false
-	fi
-}
-
 # Gather flag inputs
-while getopts EDu:p:t:adi o; do
-	case $o in
+while getopts EDu:p:t:adio: j; do
+	case $j in
 		E) E="ENCRYPT" ;;
 		D) D="DECRYPT" ;;
 		u) u=$OPTARG ;;
 		p) p=$OPTARG ;;
-		t) t="$OPTARG" ;;
-		a) a="$OPTARG" ;;
-		d) d="$OPTARG" ;;
-		i) i="$OPTARG" ;;
+		o) o=$OPTARG ;;
+		t) t=$OPTARG ;;
+		a) a="a" ;;
+		d) d="d" ;;
+		i) i="i" ;;
 	esac
 done
 
@@ -38,15 +30,41 @@ if [ -z "${E}" ] || [ -z "${D}" ] && [ -z "${u}" ] || [ -z "${p}" ]; then
     usage
 fi
 
-if [ E="ENCRYPT" ] ; then
-	# Encrypt code
+# ENCRYPT mode
+if ! [ -z "${E}" ] ; then
 	recipient=$u
-	filepath=$p
+	filepath=${p}
 
 	if [ -d "$filepath" ]; then
 		# File path exists, do stuff
-		echo "doing stuff"
+		if ! [ -z "${a}" ]; then
+			for d in ${filepath}*/; do
+				tar_flag="-czvf" 
+				tar_extension="gz"
+				output_path=$filepath
+
+				# if `-t` flag is present
+				if ! [ -z "${t}" ] && [ $t="bz2" ]; then
+					tar_flag="-cjvf"
+					tar_extension="bz2"
+				fi
+
+				# if `-o` flag is present
+				if ! [ -z "${o}" ]; then
+				# TODO: make sure that this filepath exists
+					output_path=$o
+				fi 
+
+				# Tar, encrypt and remove original tar files
+				tar $tar_flag "${output_path}$(basename $d).tar.${tar_extension}" $d && \
+					gpg -r $u --encrypt "./${output_path}$(basename $d).tar.${tar_extension}" && \
+					rm "./${output_path}/$(basename $d).tar.${tar_extension}"
+			done
+		else
+			echo "Encrypting: ${filepath}"
+		fi
 	else 
+		# Path doesn't exists, return error
 		echo "$0 is not a directory or does not exists."
 		exit 1
 	fi
