@@ -1,3 +1,5 @@
+**Work in progress - DO NOT USE**
+
 # Cifer - Wrapper Shell for GPG
 
 No, I didn't mispell Cipher.
