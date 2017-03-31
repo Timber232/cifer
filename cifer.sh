@@ -60,6 +60,18 @@ if ! [ -z "${E}" ] ; then
 					fi
 				fi 
 
+				# if `-i` flag is present
+				if ! [ -z "${i}" ]; then
+					# TODO: implement code for -d
+					echo "-i flag is present"
+				fi 
+
+				# if `-d` flag is present
+				if ! [ -z "${d}" ]; then
+					# TODO: implement code for -d
+					echo "-d flag is present"
+				fi 
+
 				# Tar, encrypt and remove original tar files
 				tar $tar_flag "${output_path}$(basename $d).tar.${tar_extension}" $d && \
 					gpg -r $u --encrypt "./${output_path}$(basename $d).tar.${tar_extension}" && \
