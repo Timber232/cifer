@@ -46,7 +46,7 @@ cifer -D -u [uid] -p [file_path]
 
 ## Examples
 
-**Example glag usage for encryp mode (`-E`)**
+**Example flag usage for encryp mode (`-E`)**
 
 Encrypt a single folder
 ```
