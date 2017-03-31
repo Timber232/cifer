@@ -51,8 +51,13 @@ if ! [ -z "${E}" ] ; then
 
 				# if `-o` flag is present
 				if ! [ -z "${o}" ]; then
-				# TODO: make sure that this filepath exists
-					output_path=$o
+					if [ -d "${o}" ]; then
+						output_path=$o
+					else
+						# Output directory does not exists. Exit with error.
+						echo "$o is not a directory or does not exists."
+						exit 1
+					fi
 				fi 
 
 				# Tar, encrypt and remove original tar files
