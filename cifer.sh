@@ -11,7 +11,7 @@ function usage() {
 }
 
 # Gather flag inputs
-while getopts EDu:p:t:adio: j; do
+while getopts EDu:p:t:ado: j; do
 	case $j in
 		E) E="ENCRYPT" ;;
 		D) D="DECRYPT" ;;
