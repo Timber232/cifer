@@ -36,46 +36,75 @@ if ! [ -z "${E}" ] ; then
 	filepath=${p}
 
 	if [ -d "$filepath" ]; then
+		tar_flag="-czvf" 
+		tar_extension="gz"
+		output_path=$filepath
+
+		# if `-t` flag is present
+		if ! [ -z "${t}" ] && [ $t="bz2" ]; then
+			tar_flag="-cjvf"
+			tar_extension="bz2"
+		fi
+
+		# if `-o` flag is present
+		if ! [ -z "${o}" ]; then
+			if [ -d "${o}" ]; then
+				output_path=$o
+			else
+				# Output directory does not exists. Exit with error.
+				echo "$o is not a directory or does not exists."
+				exit 1
+			fi
+		fi 
+
+		# if `-i` flag is present
+		if ! [ -z "${i}" ]; then
+			# TODO: implement code for -d
+			echo "-i flag is present"
+		fi 
+
+		# if `-d` flag is present
+		if ! [ -z "${d}" ]; then
+			# TODO: implement code for -d
+			echo "-d flag is present"
+		fi 
+
+		# Check if user would like to overwrite existing encrypted file(s).
+		existing_encrypted_file=()
+		for d in $filepath/*/; do
+			if test -e "${output_path}$(basename $d).tar.${tar_extension}.gpg"; then
+				existing_encrypted_file+=("${output_path}$(basename $d).tar.${tar_extension}.gpg")
+			fi
+		done
+
+
+		if ! [ ${#existing_encrypted_file[@]} -eq 0 ]; then
+			for i in "${existing_encrypted_file[@]}"; do 
+				echo "$i"
+			done
+
+			echo "This will overwrite file(s) listed above. Continue?"
+			select yn in "Yes" "No"; do
+				case $yn in
+					Yes ) 
+						for d in $filepath/*/; do
+							rm "${output_path}$(basename $d).tar.${tar_extension}.gpg"
+						done
+						break;;
+					No ) 
+						echo "Will not overwrite existing files. Exiting..."
+						exit;;
+				esac
+			done
+		fi
+
 		# File path exists, do stuff
 		if ! [ -z "${a}" ]; then
 			for d in ${filepath}*/; do
-				tar_flag="-czvf" 
-				tar_extension="gz"
-				output_path=$filepath
-
-				# if `-t` flag is present
-				if ! [ -z "${t}" ] && [ $t="bz2" ]; then
-					tar_flag="-cjvf"
-					tar_extension="bz2"
-				fi
-
-				# if `-o` flag is present
-				if ! [ -z "${o}" ]; then
-					if [ -d "${o}" ]; then
-						output_path=$o
-					else
-						# Output directory does not exists. Exit with error.
-						echo "$o is not a directory or does not exists."
-						exit 1
-					fi
-				fi 
-
-				# if `-i` flag is present
-				if ! [ -z "${i}" ]; then
-					# TODO: implement code for -d
-					echo "-i flag is present"
-				fi 
-
-				# if `-d` flag is present
-				if ! [ -z "${d}" ]; then
-					# TODO: implement code for -d
-					echo "-d flag is present"
-				fi 
-
 				# Tar, encrypt and remove original tar files
 				tar $tar_flag "${output_path}$(basename $d).tar.${tar_extension}" $d && \
-					gpg -r $u --encrypt "./${output_path}$(basename $d).tar.${tar_extension}" && \
-					rm "./${output_path}/$(basename $d).tar.${tar_extension}"
+					gpg -r $u --encrypt "${output_path}$(basename $d).tar.${tar_extension}" && \
+					rm "${output_path}$(basename $d).tar.${tar_extension}"
 			done
 		else
 			echo "Encrypting: ${filepath}"
