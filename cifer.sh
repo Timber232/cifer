@@ -55,13 +55,7 @@ if ! [ -z "${E}" ] ; then
 				echo "$o is not a directory or does not exists."
 				exit 1
 			fi
-		fi 
-
-		# if `-i` flag is present
-		if ! [ -z "${i}" ]; then
-			# TODO: implement code for -d
-			echo "-i flag is present"
-		fi 
+		fi
 
 		# if `-d` flag is present
 		if ! [ -z "${d}" ]; then
@@ -84,7 +78,7 @@ if ! [ -z "${E}" ] ; then
 			done
 
 			echo "This will overwrite file(s) listed above. Continue?"
-			select yn in "Yes" "No"; do
+			select yn in "Yes" "No"; do			
 				case $yn in
 					Yes ) 
 						for d in $filepath/*/; do
@@ -92,7 +86,7 @@ if ! [ -z "${E}" ] ; then
 						done
 						break;;
 					No ) 
-						echo "Will not overwrite existing files. Exiting..."
+						echo "Will not overwrite existing files. Exiting."
 						exit;;
 				esac
 			done
