@@ -57,12 +57,6 @@ if ! [ -z "${E}" ] ; then
 			fi
 		fi
 
-		# if `-d` flag is present
-		if ! [ -z "${d}" ]; then
-			# TODO: implement code for -d
-			echo "-d flag is present"
-		fi 
-
 		# Check if user would like to overwrite existing encrypted file(s).
 		existing_encrypted_file=()
 		for d in $filepath/*/; do
@@ -99,6 +93,20 @@ if ! [ -z "${E}" ] ; then
 				tar $tar_flag "${output_path}$(basename $d).tar.${tar_extension}" $d && \
 					gpg -r $u --encrypt "${output_path}$(basename $d).tar.${tar_extension}" && \
 					rm "${output_path}$(basename $d).tar.${tar_extension}"
+
+				# Display feedback 
+				if [ $? -eq 0 ]; then
+					echo -e "\e[32mSucess! Output: ${output_path}$(basename $d).tar.${tar_extension}\e[0m"
+					# if `-d` flag is present
+					if ! [ -z "${d}" ]; then
+						echo -e "\e[33mDestructive flag detected."	
+						rm -Rf $d
+						echo -e "Original directory removed: $d\e[0m"
+					fi
+				else
+					echo -e "\e[31mFailed to encrypt. Exiting."
+					exit 1
+				fi
 			done
 		else
 			echo "Encrypting: ${filepath}"
