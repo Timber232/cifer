@@ -120,15 +120,16 @@ echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, ne
     ./test/source_folder/ignore_existing/test_4/fusce.txt \
     ./test/source_folder/ignore_existing/test_4/fusce1.txt \
     ./test/source_folder/ignore_existing/test_4/fusce2.txt \
-    
-mkdir -p ./test/encrypted_output_folder
-mkdir -p ./test/decrypted_output_folder
 
 # Clear the content of the output folders:
 if [ "$(ls -A ./test/encrypted_output_folder/)" ]; then
-     rm ./test/encrypted_output_folder/*
+     rm -Rf ./test/encrypted_output_folder
 fi
 
 if [ "$(ls -A ./test/decrypted_output_folder/)" ]; then
-     ./test/decrypted_output_folder/*
+     rm -Rf ./test/decrypted_output_folder
 fi
+
+mkdir -p ./test/encrypted_output_folder
+mkdir -p ./test/decrypted_output_folder
+
