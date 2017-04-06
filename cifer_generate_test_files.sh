@@ -22,6 +22,7 @@ mkdir -p \
     ./test/source_folder/single_folder/test_2/ \
     ./test/source_folder/single_folder/test_3/ \
     ./test/source_folder/single_folder/test_4/
+printf "\nGenerating test data for 'single_folder'\n"
 echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, nec sagittis justo interdum. Quisque nec lobortis magna. Proin a tellus ac nisl ullamcorper euismod nec eu nulla."  | tee -a \
     ./test/source_folder/single_folder/test_1/fusce.txt \
     ./test/source_folder/single_folder/test_1/fusce1.txt \
@@ -42,6 +43,7 @@ mkdir -p \
     ./test/source_folder/multiple_folders/test_2/ \
     ./test/source_folder/multiple_folders/test_3/ \
     ./test/source_folder/multiple_folders/test_4/
+printf "\nGenerating test data for 'multiple_folders'\n"
 echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, nec sagittis justo interdum. Quisque nec lobortis magna. Proin a tellus ac nisl ullamcorper euismod nec eu nulla."  | tee -a \
     ./test/source_folder/multiple_folders/test_1/fusce.txt \
     ./test/source_folder/multiple_folders/test_1/fusce1.txt \
@@ -62,6 +64,7 @@ mkdir -p \
     ./test/source_folder/destructive/test_2/ \
     ./test/source_folder/destructive/test_3/ \
     ./test/source_folder/destructive/test_4/
+printf "\nGenerating test data for 'destructive'\n"
 echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, nec sagittis justo interdum. Quisque nec lobortis magna. Proin a tellus ac nisl ullamcorper euismod nec eu nulla."  | tee -a \
     ./test/source_folder/destructive/test_1/fusce.txt \
     ./test/source_folder/destructive/test_1/fusce1.txt \
@@ -82,6 +85,7 @@ mkdir -p \
     ./test/source_folder/bz2/test_2/ \
     ./test/source_folder/bz2/test_3/ \
     ./test/source_folder/bz2/test_4/
+printf "\nGenerating test data for 'bz2'\n"
 echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, nec sagittis justo interdum. Quisque nec lobortis magna. Proin a tellus ac nisl ullamcorper euismod nec eu nulla."  | tee -a \
     ./test/source_folder/bz2/test_1/fusce.txt \
     ./test/source_folder/bz2/test_1/fusce1.txt \
@@ -102,6 +106,7 @@ mkdir -p \
     ./test/source_folder/ignore_existing/test_2/ \
     ./test/source_folder/ignore_existing/test_3/ \
     ./test/source_folder/ignore_existing/test_4/
+printf "\nGenerating test data for 'ignore_existing'\n"
 echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, nec sagittis justo interdum. Quisque nec lobortis magna. Proin a tellus ac nisl ullamcorper euismod nec eu nulla."  | tee -a \
     ./test/source_folder/ignore_existing/test_1/fusce.txt \
     ./test/source_folder/ignore_existing/test_1/fusce1.txt \
@@ -120,5 +125,10 @@ mkdir -p ./test/encrypted_output_folder
 mkdir -p ./test/decrypted_output_folder
 
 # Clear the content of the output folders:
-rm ./test/encrypted_output_folder/*
-rm ./test/decrypted_output_folder/*
+if [ "$(ls -A ./test/encrypted_output_folder/)" ]; then
+     rm ./test/encrypted_output_folder/*
+fi
+
+if [ "$(ls -A ./test/decrypted_output_folder/)" ]; then
+     ./test/decrypted_output_folder/*
+fi
