@@ -14,7 +14,6 @@ This is a custom shell script to encrypt/decrypt multiple folders using GPG.
 - **-t**: Takes the archive method parameter (accepts: `gz`|`bz2`). Default is `gz`
 - **-a**: Performs action (encrypt|decrypt) on all contents within the target directory
 - **-d**: Destructive. Destroys original files after encryption or decryption
-- **-i**: Ignore if exists, don't replace existing files.
 
 ## Usage
 
@@ -68,10 +67,4 @@ cifer -E -u [uid] -p [file_path] -t [[gz|bz2]]
 Encrypt folder with destructive flag, this will destroy the original file and replace it with the encrypted file.
 ```
 cifer -E -d -u [uid] -p [file_path]
-```
-
-Ignore existing files and encrypt only new folders
-```
-cifer -E -i -u [uid] -p [file_path]
-cifer -E -i -a -u [uid] -p [file_path]
 ```
