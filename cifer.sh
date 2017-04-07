@@ -59,9 +59,9 @@ if ! [ -z "${E}" ] ; then
 
 		# Check if user would like to overwrite existing encrypted file(s).
 		existing_encrypted_file=()
-		for d in $filepath/*/; do
-			if test -e "${output_path}$(basename $d).tar.${tar_extension}.gpg"; then
-				existing_encrypted_file+=("${output_path}$(basename $d).tar.${tar_extension}.gpg")
+		for directory in $filepath/*/; do
+			if test -e "${output_path}$(basename $directory).tar.${tar_extension}.gpg"; then
+				existing_encrypted_file+=("${output_path}$(basename $directory).tar.${tar_extension}.gpg")
 			fi
 		done
 
@@ -75,8 +75,8 @@ if ! [ -z "${E}" ] ; then
 			select yn in "Yes" "No"; do			
 				case $yn in
 					Yes ) 
-						for d in $filepath/*/; do
-							rm "${output_path}$(basename $d).tar.${tar_extension}.gpg"
+						for directory in $filepath/*/; do
+							rm "${output_path}$(basename $directory).tar.${tar_extension}.gpg"
 						done
 						break;;
 					No ) 
@@ -88,20 +88,20 @@ if ! [ -z "${E}" ] ; then
 
 		# File path exists, do stuff
 		if ! [ -z "${a}" ]; then
-			for d in ${filepath}*/; do
+			for directory in ${filepath}*/; do
 				# Tar, encrypt and remove original tar files
-				tar $tar_flag "${output_path}$(basename $d).tar.${tar_extension}" $d && \
-					gpg -r $u --encrypt "${output_path}$(basename $d).tar.${tar_extension}" && \
-					rm "${output_path}$(basename $d).tar.${tar_extension}"
+				tar $tar_flag "${output_path}$(basename $directory).tar.${tar_extension}" $directory && \
+					gpg -r $u --encrypt "${output_path}$(basename $directory).tar.${tar_extension}" && \
+					rm "${output_path}$(basename $directory).tar.${tar_extension}"
 
 				# Display feedback 
 				if [ $? -eq 0 ]; then
-					echo -e "\e[32mSucess! Output: ${output_path}$(basename $d).tar.${tar_extension}\e[0m"
+					echo -e "\e[32mSucess! Output: ${output_path}$(basename $directory).tar.${tar_extension}\e[0m"
 					# if `-d` flag is present
 					if ! [ -z "${d}" ]; then
 						echo -e "\e[33mDestructive flag detected."	
-						rm -Rf $d
-						echo -e "Original directory removed: $d\e[0m"
+						rm -Rf $directory
+						echo -e "Original directory removed: $directory\e[0m"
 					fi
 				else
 					echo -e "\e[31mFailed to encrypt. Exiting."
@@ -118,12 +118,12 @@ if ! [ -z "${E}" ] ; then
 	fi
 	# for d in $filepath/*/; do
 	# 	# Delete encrypted files if exists
-	# 	if test -e "./$filepath/$(basename $d).tar.gz.gpg"; then
-	# 		rm "./$filepath/$(basename $d).tar.gz.gpg"
+	# 	if test -e "./$filepath/$(basename $directory).tar.gz.gpg"; then
+	# 		rm "./$filepath/$(basename $directory).tar.gz.gpg"
 	# 	fi
 
 	# 	# Tar and encrypt (remove the original tar afterwards)
-	# 	tar -czvf "./$filepath/$(basename $d).tar.gz" $d && gpg -r $recipient --encrypt "./$filepath/$(basename $d).tar.gz" && rm "./$filepath/$(basename $d).tar.gz"	
+	# 	tar -czvf "./$filepath/$(basename $directory).tar.gz" $directory && gpg -r $recipient --encrypt "./$filepath/$(basename $directory).tar.gz" && rm "./$filepath/$(basename $directory).tar.gz"	
 	# done
 # elif [ D="DECRYPT" ]; then
 	# Decrypt code
@@ -132,11 +132,11 @@ fi
 
 # for d in $filepath/*/; do
 # 	# Delete encrypted files if exists
-# 	if test -e "./$filepath/$(basename $d).tar.gz.gpg"; then
-# 		rm "./$filepath/$(basename $d).tar.gz.gpg"
+# 	if test -e "./$filepath/$(basename $directory).tar.gz.gpg"; then
+# 		rm "./$filepath/$(basename $directory).tar.gz.gpg"
 # 	fi
 
 # 	# Tar and encrypt (remove the original tar afterwards)
-# 	tar -czvf "./$filepath/$(basename $d).tar.gz" $d && gpg -r $recipient --encrypt "./$filepath/$(basename $d).tar.gz" && rm "./$filepath/$(basename $d).tar.gz"	
+# 	tar -czvf "./$filepath/$(basename $directory).tar.gz" $directory && gpg -r $recipient --encrypt "./$filepath/$(basename $directory).tar.gz" && rm "./$filepath/$(basename $directory).tar.gz"	
 # done
 
