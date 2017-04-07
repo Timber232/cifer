@@ -13,6 +13,8 @@
 #   - decrypted_output_folder
 # ===========================
 
+rm -Rf ./test
+
 # Generate test files
 mkdir -p ./test/source_folder
 
@@ -120,15 +122,6 @@ echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, ne
     ./test/source_folder/ignore_existing/test_4/fusce.txt \
     ./test/source_folder/ignore_existing/test_4/fusce1.txt \
     ./test/source_folder/ignore_existing/test_4/fusce2.txt \
-
-# Clear the content of the output folders:
-if [ "$(ls -A ./test/encrypted_output_folder/)" ]; then
-     rm -Rf ./test/encrypted_output_folder
-fi
-
-if [ "$(ls -A ./test/decrypted_output_folder/)" ]; then
-     rm -Rf ./test/decrypted_output_folder
-fi
 
 mkdir -p ./test/encrypted_output_folder
 mkdir -p ./test/decrypted_output_folder
