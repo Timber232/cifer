@@ -109,7 +109,18 @@ if ! [ -z "${E}" ] ; then
 				fi
 			done
 		else
-			echo "Encrypting: ${filepath}"
+			filepath=${filepath%/}
+			if [ -d "$filepath" ]; then
+				echo "Encrypting: $filepath"
+				tar $tar_flag "${output_path}$(basename $filepath).tar.${tar_extension}" $filepath && \
+					gpg -r $u --encrypt "${output_path}$(basename $filepath).tar.${tar_extension}" && \
+					rm "${output_path}$(basename $filepath).tar.${tar_extension}"
+				if ! [ -z "${d}" ]; then
+					echo -e "\e[33mDestructive flag detected."	
+					rm -Rf $filepath
+					echo -e "Original directory removed: $filepath\e[0m"
+				fi
+			fi
 		fi
 	else 
 		# Path doesn't exists, return error
