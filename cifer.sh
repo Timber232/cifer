@@ -30,7 +30,7 @@ if [ -z "${E}" ] || [ -z "${D}" ] && [ -z "${u}" ] || [ -z "${p}" ]; then
     usage
 fi
 
-# ENCRYPT mode
+# ENCRYPT Mode
 if ! [ -z "${E}" ] ; then
 	recipient=$u
 	filepath=${p}
@@ -88,6 +88,7 @@ if ! [ -z "${E}" ] ; then
 
 		# File path exists, do stuff
 		if ! [ -z "${a}" ]; then
+			# Encrypt all directory within the target path
 			for directory in ${filepath}*/; do
 				# Tar, encrypt and remove original tar files
 				tar $tar_flag "${output_path}$(basename $directory).tar.${tar_extension}" $directory && \
@@ -109,6 +110,7 @@ if ! [ -z "${E}" ] ; then
 				fi
 			done
 		else
+			# Encrypt target directory only
 			filepath=${filepath%/}
 			if [ -d "$filepath" ]; then
 				echo "Encrypting: $filepath"
@@ -127,27 +129,19 @@ if ! [ -z "${E}" ] ; then
 		echo "$0 is not a directory or does not exists."
 		exit 1
 	fi
+
+# DECRYPT Mode
+elif [ D="DECRYPT" ]; then
+	# Decrypt code
+	
 	# for d in $filepath/*/; do
-	# 	# Delete encrypted files if exists
+	# 	Delete encrypted files if exists
 	# 	if test -e "./$filepath/$(basename $directory).tar.gz.gpg"; then
 	# 		rm "./$filepath/$(basename $directory).tar.gz.gpg"
 	# 	fi
 
-	# 	# Tar and encrypt (remove the original tar afterwards)
+	# 	  Tar and encrypt (remove the original tar afterwards)
 	# 	tar -czvf "./$filepath/$(basename $directory).tar.gz" $directory && gpg -r $recipient --encrypt "./$filepath/$(basename $directory).tar.gz" && rm "./$filepath/$(basename $directory).tar.gz"	
 	# done
-# elif [ D="DECRYPT" ]; then
-	# Decrypt code
-
 fi
-
-# for d in $filepath/*/; do
-# 	# Delete encrypted files if exists
-# 	if test -e "./$filepath/$(basename $directory).tar.gz.gpg"; then
-# 		rm "./$filepath/$(basename $directory).tar.gz.gpg"
-# 	fi
-
-# 	# Tar and encrypt (remove the original tar afterwards)
-# 	tar -czvf "./$filepath/$(basename $directory).tar.gz" $directory && gpg -r $recipient --encrypt "./$filepath/$(basename $directory).tar.gz" && rm "./$filepath/$(basename $directory).tar.gz"	
-# done
 
