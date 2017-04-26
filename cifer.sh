@@ -31,7 +31,7 @@ if [ -z "${E}" ] || [ -z "${D}" ] && [ -z "${u}" ] || [ -z "${p}" ]; then
 fi
 
 # ENCRYPT Mode
-if ! [ -z "${E}" ] ; then
+if [ E="ENCRYPT" ] ; then
 	recipient=$u
 	filepath=${p}
 
@@ -114,9 +114,9 @@ if ! [ -z "${E}" ] ; then
 			filepath=${filepath%/}
 			if [ -d "$filepath" ]; then
 				echo "Encrypting: $filepath"
-				tar $tar_flag "${output_path}$(basename $filepath).tar.${tar_extension}" $filepath && \
-					gpg -r $u --encrypt "${output_path}$(basename $filepath).tar.${tar_extension}" && \
-					rm "${output_path}$(basename $filepath).tar.${tar_extension}"
+				tar $tar_flag "${output_path}.tar.${tar_extension}" $filepath && \
+					gpg -r $u --encrypt "${output_path}.tar.${tar_extension}" && \
+					rm "${output_path}.tar.${tar_extension}"
 				if ! [ -z "${d}" ]; then
 					echo -e "\e[33mDestructive flag detected."	
 					rm -Rf $filepath
@@ -133,7 +133,7 @@ if ! [ -z "${E}" ] ; then
 # DECRYPT Mode
 elif [ D="DECRYPT" ]; then
 	# Decrypt code
-	
+	echo "Decrypt mode"
 	# for d in $filepath/*/; do
 	# 	Delete encrypted files if exists
 	# 	if test -e "./$filepath/$(basename $directory).tar.gz.gpg"; then

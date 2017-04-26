@@ -123,6 +123,8 @@ echo "Fusce sed velit metus. Vestibulum convallis arcu pharetra nunc aliquam, ne
     ./test/source_folder/ignore_existing/test_4/fusce1.txt \
     ./test/source_folder/ignore_existing/test_4/fusce2.txt \
 
+printf "Full Name: Test User\nEmail: test@example.com\nPassphrase: test\n\npub   rsa2048 2017-04-23 [SC] [expires: 2019-04-23]\n      56CBD9D28C9851ECF2C47EAA7B9D1E86B478FCF4\n      56CBD9D28C9851ECF2C47EAA7B9D1E86B478FCF4\nuid                      Test User <test@example.com>\nsub   rsa2048 2017-04-23 [E] [expires: 2019-04-23]\n" | tee -a \
+    ./test/gpg_info.txt
+
 mkdir -p ./test/encrypted_output_folder
 mkdir -p ./test/decrypted_output_folder
-
