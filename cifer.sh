@@ -33,28 +33,28 @@ fi
 recipient=$u
 filepath=${p}
 
+# if `-t` flag is present
+tar_flag="-czvf" 
+tar_extension="gz"
+if ! [ -z "${t}" ] && [ $t="bz2" ]; then
+	tar_flag="-cjvf"
+	tar_extension="bz2"
+fi
+
+# if `-o` flag is present
+if ! [ -z "${o}" ]; then
+	if [ -d "${o}" ]; then
+		filepath=$o
+	else
+		# Output directory does not exists. Exit with error.
+		echo "$o is not a directory or does not exists."
+		exit 1
+	fi
+fi
+
 # ENCRYPT Mode
 if [ E="ENCRYPT" ] ; then
 	if [ -d "$filepath" ]; then
-		tar_flag="-czvf" 
-		tar_extension="gz"
-
-		# if `-t` flag is present
-		if ! [ -z "${t}" ] && [ $t="bz2" ]; then
-			tar_flag="-cjvf"
-			tar_extension="bz2"
-		fi
-
-		# if `-o` flag is present
-		if ! [ -z "${o}" ]; then
-			if [ -d "${o}" ]; then
-				filepath=$o
-			else
-				# Output directory does not exists. Exit with error.
-				echo "$o is not a directory or does not exists."
-				exit 1
-			fi
-		fi
 
 		# Check if user would like to overwrite existing encrypted file(s).
 		existing_encrypted_file=()
@@ -63,7 +63,6 @@ if [ E="ENCRYPT" ] ; then
 				existing_encrypted_file+=("${filepath}$(basename $directory).tar.${tar_extension}.gpg")
 			fi
 		done
-
 
 		if ! [ ${#existing_encrypted_file[@]} -eq 0 ]; then
 			for i in "${existing_encrypted_file[@]}"; do 
