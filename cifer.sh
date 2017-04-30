@@ -90,23 +90,27 @@ if [ E="ENCRYPT" ] ; then
 			filepath=$(echo $filepath | sed 's:/*$::')/
 			# Encrypt all directory within the target path
 			for directory in ${filepath}*/; do
-				# Tar, encrypt and remove original tar files
-				tar $tar_flag "${filepath}$(basename $directory).tar.${tar_extension}" $directory && \
-					gpg -r $u --encrypt "${filepath}$(basename $directory).tar.${tar_extension}" && \
-					rm "${filepath}$(basename $directory).tar.${tar_extension}"
+				if [ "$(basename $directory)" != "*" ]; then
+					# Tar, encrypt and remove original tar files
+					tar $tar_flag "${filepath}$(basename $directory).tar.${tar_extension}" $directory && \
+						gpg -r $u --encrypt "${filepath}$(basename $directory).tar.${tar_extension}" && \
+						rm "${filepath}$(basename $directory).tar.${tar_extension}"
 
-				# Display feedback 
-				if [ $? -eq 0 ]; then
-					echo -e "\e[32mSucess! Output: ${filepath}$(basename $directory).tar.${tar_extension}\e[0m"
-					# if `-d` flag is present
-					if ! [ -z "${d}" ]; then
-						echo -e "\e[33mDestructive flag detected."	
-						rm -Rf $directory
-						echo -e "Original directory removed: $directory\e[0m"
+					# Display feedback 
+					if [ $? -eq 0 ]; then
+						echo -e "\e[32mSucess! Output: ${filepath}$(basename $directory).tar.${tar_extension}\e[0m"
+						# if `-d` flag is present
+						if ! [ -z "${d}" ]; then
+							echo -e "\e[33mDestructive flag detected."	
+							rm -Rf $directory
+							echo -e "Original directory removed: $directory\e[0m"
+						fi
+					else
+						echo -e "\e[31mFailed to encrypt. Exiting."
+						exit 1
 					fi
 				else
-					echo -e "\e[31mFailed to encrypt. Exiting."
-					exit 1
+					echo "All files in this folder are already encrypted."
 				fi
 			done
 		else
