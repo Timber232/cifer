@@ -30,15 +30,14 @@ if [ -z "${E}" ] || [ -z "${D}" ] && [ -z "${u}" ] || [ -z "${p}" ]; then
     usage
 fi
 
+recipient=$u
+filepath=${p}
+
 # ENCRYPT Mode
 if [ E="ENCRYPT" ] ; then
-	recipient=$u
-	filepath=${p}
-
 	if [ -d "$filepath" ]; then
 		tar_flag="-czvf" 
 		tar_extension="gz"
-		output_path=$filepath
 
 		# if `-t` flag is present
 		if ! [ -z "${t}" ] && [ $t="bz2" ]; then
@@ -49,7 +48,7 @@ if [ E="ENCRYPT" ] ; then
 		# if `-o` flag is present
 		if ! [ -z "${o}" ]; then
 			if [ -d "${o}" ]; then
-				output_path=$o
+				filepath=$o
 			else
 				# Output directory does not exists. Exit with error.
 				echo "$o is not a directory or does not exists."
@@ -60,8 +59,8 @@ if [ E="ENCRYPT" ] ; then
 		# Check if user would like to overwrite existing encrypted file(s).
 		existing_encrypted_file=()
 		for directory in $filepath/*/; do
-			if test -e "${output_path}$(basename $directory).tar.${tar_extension}.gpg"; then
-				existing_encrypted_file+=("${output_path}$(basename $directory).tar.${tar_extension}.gpg")
+			if test -e "${filepath}$(basename $directory).tar.${tar_extension}.gpg"; then
+				existing_encrypted_file+=("${filepath}$(basename $directory).tar.${tar_extension}.gpg")
 			fi
 		done
 
@@ -76,7 +75,7 @@ if [ E="ENCRYPT" ] ; then
 				case $yn in
 					Yes ) 
 						for directory in $filepath/*/; do
-							rm "${output_path}$(basename $directory).tar.${tar_extension}.gpg"
+							rm "${filepath}$(basename $directory).tar.${tar_extension}.gpg"
 						done
 						break;;
 					No ) 
@@ -88,16 +87,18 @@ if [ E="ENCRYPT" ] ; then
 
 		# File path exists, do stuff
 		if ! [ -z "${a}" ]; then
+			# Ensure that there are trailing forward slash at the end of the path
+			filepath=$(echo $filepath | sed 's:/*$::')/
 			# Encrypt all directory within the target path
 			for directory in ${filepath}*/; do
 				# Tar, encrypt and remove original tar files
-				tar $tar_flag "${output_path}$(basename $directory).tar.${tar_extension}" $directory && \
-					gpg -r $u --encrypt "${output_path}$(basename $directory).tar.${tar_extension}" && \
-					rm "${output_path}$(basename $directory).tar.${tar_extension}"
+				tar $tar_flag "${filepath}$(basename $directory).tar.${tar_extension}" $directory && \
+					gpg -r $u --encrypt "${filepath}$(basename $directory).tar.${tar_extension}" && \
+					rm "${filepath}$(basename $directory).tar.${tar_extension}"
 
 				# Display feedback 
 				if [ $? -eq 0 ]; then
-					echo -e "\e[32mSucess! Output: ${output_path}$(basename $directory).tar.${tar_extension}\e[0m"
+					echo -e "\e[32mSucess! Output: ${filepath}$(basename $directory).tar.${tar_extension}\e[0m"
 					# if `-d` flag is present
 					if ! [ -z "${d}" ]; then
 						echo -e "\e[33mDestructive flag detected."	
@@ -114,9 +115,9 @@ if [ E="ENCRYPT" ] ; then
 			filepath=${filepath%/}
 			if [ -d "$filepath" ]; then
 				echo "Encrypting: $filepath"
-				tar $tar_flag "${output_path}.tar.${tar_extension}" $filepath && \
-					gpg -r $u --encrypt "${output_path}.tar.${tar_extension}" && \
-					rm "${output_path}.tar.${tar_extension}"
+				tar $tar_flag "${filepath}.tar.${tar_extension}" $filepath && \
+					gpg -r $u --encrypt "${filepath}.tar.${tar_extension}" && \
+					rm "${filepath}.tar.${tar_extension}"
 				if ! [ -z "${d}" ]; then
 					echo -e "\e[33mDestructive flag detected."	
 					rm -Rf $filepath
