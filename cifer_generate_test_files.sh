@@ -128,3 +128,10 @@ printf "\n\nFull Name: Test User\nEmail: test@example.com\nPassphrase: test\n\np
 
 mkdir -p ./test/encrypted_output_folder
 mkdir -p ./test/decrypted_output_folder
+
+# Export test keys
+mkdir -p ./test/test_keys
+gpg --export-secret-key test@example.com > ./test/test_keys/private.key
+gpg --export test@example.com > ./test/test_keys/public.key
+gpg --export-ownertrust > ./test/test_keys/ownertrust.key
+
