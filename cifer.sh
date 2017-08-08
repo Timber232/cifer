@@ -53,7 +53,7 @@ if ! [ -z "${o}" ]; then
 fi
 
 # ENCRYPT Mode
-if [ E="ENCRYPT" ] ; then
+if [[ $E == "ENCRYPT" ]] ; then
 	if [ -d "$filepath" ]; then
 
 		# Check if user would like to overwrite existing encrypted file(s).
@@ -135,7 +135,7 @@ if [ E="ENCRYPT" ] ; then
 	fi
 
 # DECRYPT Mode
-elif [ D="DECRYPT" ]; then
+elif [[ $D == "DECRYPT" ]]; then
 	# Decrypt code
 	echo "Decrypt mode"
 	# for d in $filepath/*/; do
